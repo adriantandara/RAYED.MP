@@ -1,4 +1,4 @@
-import * as mysql2 from 'mysql2/promise';
+import * as mysql2 from 'mysql2';
 
 const connectionData = require('./connection.json');
 
@@ -9,44 +9,43 @@ export class Database {
         this.connect();
     }
 
-    async connect() {
-        try {
-            this.connection = await mysql2.createConnection({
-                host: connectionData.host,
-                user: connectionData.user,
-                password: connectionData.password,
-                database: connectionData.database
-            });
+    connect() {
+        this.connection = mysql2.createConnection({
+            host: connectionData.host,
+            user: connectionData.user,
+            password: connectionData.password,
+            database: connectionData.database
+        });
+        this.connection.connect((err: string) => {
+            if (err) {
+                console.error("Error connecting to the database: " + err);
+                return;
+            }
             console.log("Successfully connected to the database.");
-        } catch (error) {
-            console.error("Error connecting to the database: " + error);
-        }
+        });
         process.on('SIGINT', this.end.bind(this));
     }
 
-    async isConnected() {
-        return !!this.connection;
+    isConnected() {
+        return this.connection.state === 'authenticated';
     }
 
-    async query(query: string) {
-        try {
-            if (!this.connection) {
-                console.error("Not connected to the database");
-                return;
+    query(query: string, values?: any, callback?: any) {
+        this.connection.query(query, values, (error: any, results: any) => {
+            if (error) {
+                console.error("Error executing query: " + error);
+                return error;
             }
-            const [rows] = await this.connection.query(query);
-            return rows;
-        } catch (error) {
-            console.error("Error executing query: " + error);
-            return error;
-        }
+            callback(results);
+        });
     }
-    async end() {
-        try {
-            await this.connection.end();
-            console.log("Successfully closed the database connection.");
-        } catch (error) {
-            console.error("Error closing the database connection: " + error);
-        }
+    end() {
+        this.connection.end((error: any) => {
+            if (error) {
+                console.error("Error closing the database connection: " + error);
+            } else {
+                console.log("Successfully closed the database connection.");
+            }
+        });
     }
 }

@@ -52,7 +52,8 @@ mp.events.add("load_player_account", async (player: PlayerMp, username: string) 
 
     try {
         
-        const [rows] = await db.query(`select * from accounts where username = ${username}; update accounts set lastConnection = now() where username = ${username}`);
+        const result: any = db.query(`select * from accounts where username = ${username}; update accounts set lastConnection = now() where username = ${username}`);
+        const rows = result[0];
         if (rows.length != 0) {
 
             player.sqlID = rows[0][0].id;
@@ -91,10 +92,12 @@ function succes_auth_handle(player: PlayerMp, handle: any, username: string) {
 async function attempt_register(player: PlayerMp, username: string, email: string, gender: string, pass: string) {
     try {
         
-        const [rows] = await db.query(`SELECT username, password FROM users WHERE username = '${username}' OR email = '${email}' OR gender = '${gender}'`);
+        const results: any = db.query(`SELECT username, password FROM users WHERE username = '${username}' OR email = '${email}' OR gender = '${gender}'`);
+        const rows = results[0];
         if (rows.length !== 0) return false;
         const hash = await bcrypt.hash(pass, 10);
-        const [result] = await db.query(`insert into accounts set username = ${username}, email = ${email}, gender = ${gender}, password = ${hash}, socialClub = ${player.socialClub}, socialClubId = ${player.rgscId}`);
+        const result_insert: any = db.query(`insert into accounts set username = ${username}, email = ${email}, gender = ${gender}, password = ${hash}, socialClub = ${player.socialClub}, socialClubId = ${player.rgscId}`);
+        const result = result_insert[0];
         return result[0].affectedRows === 1;
 
     } catch (error) {
@@ -105,7 +108,8 @@ async function attempt_register(player: PlayerMp, username: string, email: strin
 async function attempt_login(username: string, password: string) {
     try {
         
-        const [rows] = await db.query(`select username, password from accounts where username = ${username}`);
+        const result: any = db.query(`select username, password from accounts where username = ${username}`);
+        const rows = result[0];
         if (rows.length === 0) return false;
 
         const res = await bcrypt.compare(password, rows[0].password);
