@@ -22,13 +22,13 @@ mp.events.add("register_account", async (player: PlayerMp, username: string, ema
                 player.setVariable("registred", true);
                 
             }
-            else failed_auth(player, 'taken_auth');
+            else failed_auth(player, 'taken-auth');
         } catch (error) {
 
             error_handler_message(error);
         }
     }
-    else failed_auth(player, 'short_auth');
+    else failed_auth(player, 'short-auth');
 });
 
 mp.events.add("login_account", async (player: PlayerMp, username: string, password: string) => {
