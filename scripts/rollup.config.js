@@ -102,6 +102,10 @@ function copyFiles() {
 		{
 			from: jetpack.path('conf.json'),
 			to: jetpack.path(buildOutput, 'conf.json')
+		},
+		{
+			from: jetpack.path('src/client/@ui'),
+			to: jetpack.path(buildOutput, 'client_packages/@ui')
 		}
 	);
 
@@ -129,9 +133,7 @@ const terserMinify =
 const generateConfig = (options = {}) => {
 	const { isServer } = options;
 
-	const outputFile = isServer
-		? resolvePath([buildOutput, 'packages', 'core', 'index.js'])
-		: resolvePath([buildOutput, 'client_packages', 'index.js']);
+	const outputFile = isServer ? resolvePath([buildOutput, 'packages', 'core', 'index.js']) : resolvePath([buildOutput, 'client_packages', 'index.js']);
 
 	const serverPlugins = [];
 	const plugins = [terserMinify];
@@ -145,6 +147,7 @@ const generateConfig = (options = {}) => {
 			file: outputFile,
 			format: 'cjs'
 		},
+		
 		plugins: [
 			tsPaths({ tsConfigPath }),
 			nodeResolvePlugin(),

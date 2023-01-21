@@ -1,30 +1,26 @@
-import { Database } from '../@database/database';
+import { Database } from '@/@database/database';
 import bcrypt from 'bcryptjs';
-const db = new Database();
 
+
+let db = new Database();
 
 /* ---- EVENTS ---- */
 mp.events.add("playerJoin", (player: PlayerMp) => {
     player.setVariable("logged", false);
-})
-mp.events.add("register_account", async (player: PlayerMp, username: string, email: string, gender: string, password: string) => {
+});
+
+mp.events.add("register_account", async (player: PlayerMp, username: string, email: string, password: string) => {
     if (username.length >= 3 && password.length >= 5) {
-
         if (!is_email_valid({ email })) return failed_auth(player, 'invalid-auth');
-
         try {
-            const row = await attempt_register(player, username, email, gender, password);
+            const row = await attempt_register(player, username, email, password);
             if (row) {
-
                 console.log(`${username} has been registred successfully.`);
                 succes_auth_handle(player, "registred", username);
-
                 player.setVariable("registred", true);
-                
             }
             else failed_auth(player, 'taken-auth');
         } catch (error) {
-
             error_handler_message(error);
         }
     }
@@ -45,39 +41,29 @@ mp.events.add("login_account", async (player: PlayerMp, username: string, passwo
         
         error_handler_message(error);
     }
-
 });
 
 mp.events.add("load_player_account", async (player: PlayerMp, username: string) => {
-
     try {
-        
-        const result: any = db.query(`select * from accounts where username = ${username}; update accounts set lastConnection = now() where username = ${username}`);
-        const rows = result[0];
-        if (rows.length != 0) {
-
-            player.sqlID = rows[0][0].id;
+        const [rows] = await db.query('SELECT * FROM `users` WHERE `username` = ?', [username]);
+        if (rows && rows.length !== 0) {
+            player.sqlID = rows.ID;
             player.name = username;
-
             player.setVariable("username", username);
             player.setVariable("logged", true);
-
             if (player.getVariable("registred") == true) {
-
                 //message register
-            }
-            else {
-
+            } else {
                 //message login
             }
-
+            db.query('UPDATE users SET lastActive = now() where username = ?', [username]);
+        } else {
+            console.log("No rows found with this user name.")
         }
-
     } catch (error) {
-        
-        error_handler_message(error);
+        if(error) console.log(error);
     }
-})
+});
 
 /* ---- FUNCTIONS ---- */
 function is_email_valid({ email }: { email: string; }): boolean {
@@ -89,37 +75,30 @@ function succes_auth_handle(player: PlayerMp, handle: any, username: string) {
     player.call('login_handler', [handle]);
     console.log(`${username} has been logged successfully.`);
 }
-async function attempt_register(player: PlayerMp, username: string, email: string, gender: string, pass: string) {
-    try {
-        
-        const results: any = db.query(`SELECT username, password FROM users WHERE username = '${username}' OR email = '${email}' OR gender = '${gender}'`);
-        const rows = results[0];
-        if (rows.length !== 0) return false;
-        const hash = await bcrypt.hash(pass, 10);
-        const result_insert: any = db.query(`insert into accounts set username = ${username}, email = ${email}, gender = ${gender}, password = ${hash}, socialClub = ${player.socialClub}, socialClubId = ${player.rgscId}`);
-        const result = result_insert[0];
-        return result[0].affectedRows === 1;
-
+async function attempt_register(player: PlayerMp, username: string, email: string, pass: string): Promise<any> {
+    try{
+        const [rows] = await db.query('SELECT username, email from users where username = ? or email = ?', [username, email]);
+        if(!rows || rows.length === 0) {
+            const hash = await bcrypt.hash(pass, 10);
+            await db.query('INSERT INTO users (username, email, password, socialClub, socialClubId) VALUES (?,?,?,?,?)', [username, email, hash, player.socialClub, player.rgscId]);
+            return true;
+        }else{
+            return false;
+        }
     } catch (error) {
-        error_handler_message(error);
+        console.log(error);
     }
-    return;
 }
-async function attempt_login(username: string, password: string) {
+async function attempt_login(username: string, password: string): Promise<any>  {
     try {
-        
-        const result: any = db.query(`select username, password from accounts where username = ${username}`);
-        const rows = result[0];
+        const [rows] = await db.query(`select username, password, id from users where username = ?`, [username]);        
         if (rows.length === 0) return false;
-
-        const res = await bcrypt.compare(password, rows[0].password);
-        return res;
-
+        const newLocal = await bcrypt.compare(password, rows.password);
+        if(newLocal) return true;
+        else return false;
     } catch (error) {
-        
-        error_handler_message(error);
+        if(error) console.log(error);
     }
-    return true;
 }
 function error_handler_message(e: any) {
     if (e.sql) {console.log(`[MySQL] ERROR: ${e.sqlMessage}\n[MySQL] QUERY: ${e.sql}`)} else { console.log(`Error: ${e}`) }

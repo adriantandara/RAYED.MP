@@ -37,7 +37,6 @@ function login_player_account(state) {
         let register_password = document.querySelector("#password-reg");
         let register_confirm = document.querySelector("#password-confirm");
 
-        if(register_gender.value.toUpperCase() != "MALE" && register_gender.value.toUpperCase() != "FEMALE") return mp.trigger("login_handler", ['gender-auth']);
-        if (register_password.value === register_confirm.value) mp.trigger("register_data", register_name.value, register_email.value, register_gender.value, register_password.value);
+        if (register_password.value === register_confirm.value) mp.trigger("register_data", register_name.value, register_email.value, register_password.value);
     }
 }
