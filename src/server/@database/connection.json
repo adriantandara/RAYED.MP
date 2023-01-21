@@ -1,6 +1,6 @@
 {
-    "host:": "",
-    "user": "",
+    "host:": "127.0.0.1",
+    "user": "userdatabaseqjz7ydapbmaoppo",
     "password": "",
-    "database": ""
+    "database": "baza2"
 }

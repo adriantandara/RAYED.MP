@@ -1,6 +1,15 @@
 import * as mysql2 from 'mysql2';
+import * as fs from 'fs';
 
-const connectionData = require('./connection.json');
+interface ConnectionData {
+  host: string;
+  user: string;
+  password: string;
+  database: string;
+}
+
+const data = fs.readFileSync('connection.json', 'utf8');
+const connectionData: ConnectionData = JSON.parse(data);
 
 export class Database {
     private connection: any;
