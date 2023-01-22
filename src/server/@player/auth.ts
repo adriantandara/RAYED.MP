@@ -64,6 +64,7 @@ mp.events.add("load_player_account", async (player: PlayerMp, username: string) 
             player.setVariable("username", username);
             player.setVariable("logged", true);
             setTimeout(() => {
+
                 if (player.getVariable("registred") == true) {
                     SendMsg(player, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Bine ai venit !{${COLORS.COLOR_SERVER}}${player.name}!{f9f9f9} pe comunitate.`);
                 } else {
@@ -72,7 +73,7 @@ mp.events.add("load_player_account", async (player: PlayerMp, username: string) 
                 }
             }, 10);
             db.query('UPDATE users SET lastActive = now() where username = ?', [username]);
-            player.call("hide_login"); spawn_player(player); player.call("showLoginChat");
+            player.call("hide_login"); spawn_player(player); player.call("showLoginChat"); player.call("loadPlayerName", [player.name]); player.call("loadPlayerCash", [player.money]); player.call("loadPlayerBank", [player.bank]); player.call("loadPlayerId", [player.id]);
         } else {
             console.log("No rows found with this user name.")
         }

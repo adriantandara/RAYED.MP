@@ -106,6 +106,10 @@ function copyFiles() {
 		{
 			from: jetpack.path('src/client/@ui'),
 			to: jetpack.path(buildOutput, 'client_packages/@ui')
+		},
+		{
+			from: jetpack.path('src/client/game_resources'),
+			to: jetpack.path(buildOutput, 'client_packages/game_resources')
 		}
 	);
 

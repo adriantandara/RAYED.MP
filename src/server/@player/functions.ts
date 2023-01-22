@@ -1,4 +1,6 @@
 import { COLORS } from "@shared/constants";
+import { pedsData } from "./pedsData";
+import { vehiclesData } from "./vehiclesData";
 
 
 const random_spawns: Vector3[] = [
@@ -13,6 +15,7 @@ const random_headings: number[] = [
 export const spawn_player = (player: PlayerMp) => {
     player.spawn(random_spawns[Math.floor(Math.random() * random_spawns.length)]);
     player.heading = random_headings[Math.floor(Math.random() * random_headings.length)];
+    player.model = mp.joaat(player.skin);
 };
 export const sendLocal = (player: PlayerMp, color: string, range: number, message: string) => {
     if (player.getVariable('logged') === true) {
@@ -56,3 +59,28 @@ export const sendAdmins = (color: string, message: string) => {
         }
     });
 };
+export const createVehicle = (player: PlayerMp, type: any, model: string, position: Vector3, colorOne: number, colorTwo: number, rotationPos = player.heading, put = 0) => { 
+  
+    const vehicle = mp.vehicles.new(mp.joaat(model), position,
+    {     
+        //@ts-ignore
+        color: [colorOne, colorTwo],
+        locked: false,
+        engine: false,
+        dimension: player.dimension,
+        type: type,
+        owner: player.name,
+        rotation: new mp.Vector3(0, 0, rotationPos)
+    });
+
+    if(put == 1) player.putIntoVehicle(vehicle, 0);  
+    return vehicle;
+};
+export const sendToAll = (color: string, message: string) => {
+    const date = new Date();
+    mp.players.forEach(x => {
+        if (x.getVariable('logged') === true) x.outputChatBox(`${(x.data.timeStamp == 1) ? (`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] `) : ('')}!{${color}} ${message}`);
+    });
+};
+export const is_valid_vehicle = (value: string) => { return (vehiclesData.includes(value) ? 1 : 0); };
+export const is_skin_valid = (value: string) => { return (pedsData.includes(value) ? 1 : 0); };

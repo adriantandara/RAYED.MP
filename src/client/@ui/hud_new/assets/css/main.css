@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+#icon-id {
+    
+    padding-right: 1.5vh;
+}
+
+.container-right {
+
+    display: flex;
+    justify-content: flex-end;
+    text-align: left;
+    color: #ebebeb;
+}
+
+.container-right .logo {
+    position: relative;
+    top: 1vh;
+    text-align: center;
+    margin-right: 3vh;
+}
+
+#logo-title {
+    
+    color: #8e53e9;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 2.5vh;
+}
+#logo-name {
+
+    position: relative;
+    color: white;
+    top: 1vh;
+    background: rgba(68, 68, 68, 0.452);
+    border-radius: .5vh;
+    padding-left: 4vh;
+    padding-right: 4vh;
+    padding-top: .7vh;
+    padding-bottom: .5vh;
+    font-family: 'Archivo', sans-serif;
+    text-transform: uppercase;
+    font-size: 1.5vh;
+    font-weight: 600;
+}
+
+.right-logo {
+    
+    display: flex;
+    align-items: center;
+}
+
+.right-logo i {
+    color: #8e53e9;
+}
+
+.right-logo .right-logo-text {
+
+    position: relative;
+    margin-right: 2vh;
+    padding-left: 1vh;
+}
+
+.right-logo .right-logo-text #clock {
+
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    color: #8e53e9;
+}
+
+.right-logo .right-logo-text #date {
+
+    font-family: 'Archivo', sans-serif;
+    font-weight: 500;
+}
+
+.container-right .bottom-right-logo {
+
+    position: absolute;
+    top: 5.5vh;
+    right: 1.7vh;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.container-right .bottom-right-logo #onlinePlayers {
+
+    padding-right: 0.5vh;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 500;
+}
+
+.bottom-right-logo i {
+    color: #8e53e9;
+}
+
+.container-money {
+
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    top: 7vh;
+    right: 1vh;
+    color: #ebebeb;
+}
+
+.container-money .container-money-right {
+
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+}
+
+.container-money .container-bank-right {
+
+    display: flex;
+    flex-direction: row-reverse;
+    position: absolute;
+    top: 2.5vh;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+}
+
+.container-money .container-money-right p {
+
+    padding-right: .5vh;
+}
+
+.container-money .container-bank-right p {
+    padding-right: .3vh;
+}
+
+.container-money .container-money-right i { color: #8e53e9; }
+.container-money .container-bank-right i { color: #8e53e9; }

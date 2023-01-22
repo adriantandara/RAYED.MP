@@ -1,5 +1,6 @@
 
 var login_browser_component: any;
+var interfaceBrowser = mp.browsers.new("package://@ui/hud_new/hud.components.html");
 
 
 /* ---- EVENTS ---- */
@@ -21,6 +22,11 @@ mp.events.add("login_handler", (handle: any) => {
     }
 });
 
+mp.events.add("loadPlayerCash", (money) => { interfaceBrowser.execute("load_player_cash('" + money + "');") });
+mp.events.add("loadPlayerBank", (money) => { interfaceBrowser.execute("load_player_bank('" + money + "');") });
+mp.events.add("loadPlayerName", (name) => { interfaceBrowser.execute("load_player_name('"+ name +"');"); });
+mp.events.add("loadPlayerId", (id) => { interfaceBrowser.execute("load_player_id('"+ id +"');"); });
+
 mp.events.add("show_login", () => {
     login_browser_component = mp.browsers.new('package://@ui/account/auth.components.html');
 
@@ -28,6 +34,8 @@ mp.events.add("show_login", () => {
     setTimeout(() => { mp.gui.cursor.show(true, true); mp.gui.chat.activate(false); }, 500);
     mp.game.ui.setPauseMenuActive(false);
     mp.game.ui.displayRadar(false);
+
+    interfaceBrowser.active = false;
     
 });
 
@@ -38,4 +46,11 @@ mp.events.add("hide_login", () => {
     mp.players.local.freezePosition(false);
     mp.gui.cursor.show(false, false);
     mp.game.ui.displayRadar(true);
-})
+
+    interfaceBrowser.active = true;
+});
+
+mp.events.add("render", () => {
+
+    if (mp.players.local.getVariable("logged") == true) interfaceBrowser.execute("load_player_online('"+ mp.players.length +"');");
+});
