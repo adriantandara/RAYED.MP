@@ -4,8 +4,9 @@ declare global {
 		registred: boolean;
 
 		username: string;
-		
+		loginTimeout: NodeJS.Timeout;
 		sqlID: number;
+		admin: number;
 	}
 }
 
