@@ -80,6 +80,11 @@ form {
     place-items: center;
 }
 
+.input-area input::placeholder {
+
+    color: white;
+}
+
 .input-area input {
     width: 90%;
     height: 3rem;

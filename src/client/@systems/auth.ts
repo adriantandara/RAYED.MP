@@ -36,6 +36,8 @@ mp.events.add("show_login", () => {
     mp.game.ui.setPauseMenuActive(false);
     mp.game.ui.displayRadar(false);
 
+    login_browser_component.execute("load_player_name_login('"+ mp.players.local.name +"');")
+
     interfaceBrowser.active = false;
     
 });
