@@ -15,7 +15,7 @@ const random_headings: number[] = [
 export const spawn_player = (player: PlayerMp) => {
     player.spawn(random_spawns[Math.floor(Math.random() * random_spawns.length)]);
     player.heading = random_headings[Math.floor(Math.random() * random_headings.length)];
-    player.model = mp.joaat(player.skin);
+    player.model = mp.joaat(player.skin); player.health = 100;
 };
 export const sendLocal = (player: PlayerMp, color: string, range: number, message: string) => {
     if (player.getVariable('logged') === true) {

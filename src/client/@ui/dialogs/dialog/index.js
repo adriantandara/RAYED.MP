@@ -56,6 +56,21 @@ function createDialog(object)
 				else list_items_str += "<li id='item" + i + "' onclick='onListItemClick(" + i + ")'>" + list_items[i] + "</li>";
 			}
 			list_items_str += "</ul></div>";
+
+			document.addEventListener("keydown", (event) => {
+				if (event.key === "ArrowUp") {
+				  document.getElementById("item" + list_selected).setAttribute("class", "");
+				  list_selected = list_selected > 0 ? list_selected - 1 : 0;
+				  document.getElementById("item" + list_selected).setAttribute("class", "selected");
+				} else if (event.key === "ArrowDown") {
+				  document.getElementById("item" + list_selected).setAttribute("class", "");
+				  list_selected = list_selected < list_items.length - 1 ? list_selected + 1 : list_items.length - 1;
+				  document.getElementById("item" + list_selected).setAttribute("class", "selected");
+				} else if (event.key === "Enter") {
+				  onListItemClick(list_selected);
+				}
+			});
+
 		}
 		if(text_input || password_input)
 		{
@@ -79,6 +94,18 @@ function createDialog(object)
 			}
 			buttons_str += "</div>";
 		}
+
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				onButtonClick(1);
+			}
+		});
+
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape") {
+				onButtonClick(0);
+			}
+		});
 
 		//ok
 		document.getElementById("dialog").innerHTML = caption_str + info_str + list_items_str + inputs_str + buttons_str;

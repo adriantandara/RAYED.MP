@@ -1,5 +1,6 @@
 import './setup';
-import './@player/auth';
 import './events';
+import './@player/auth';
+import './@player/commands';
+
 import './@staff/admin';
-import './@player/dialog'

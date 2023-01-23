@@ -28,9 +28,10 @@ mp.events.add("loadPlayerName", (name) => { interfaceBrowser.execute("load_playe
 mp.events.add("loadPlayerId", (id) => { interfaceBrowser.execute("load_player_id('"+ id +"');"); });
 
 mp.events.add("show_login", () => {
-    login_browser_component = mp.browsers.new('package://@ui/account/auth.components.html');
+    login_browser_component = mp.browsers.new('package://@ui/account/index.html');
 
     mp.players.local.freezePosition(true);
+    mp.players.local.setAlpha(0);
     setTimeout(() => { mp.gui.cursor.show(true, true); mp.gui.chat.activate(false); }, 500);
     mp.game.ui.setPauseMenuActive(false);
     mp.game.ui.displayRadar(false);
@@ -46,6 +47,7 @@ mp.events.add("hide_login", () => {
     mp.players.local.freezePosition(false);
     mp.gui.cursor.show(false, false);
     mp.game.ui.displayRadar(true);
+    mp.players.local.setAlpha(255);
 
     interfaceBrowser.active = true;
 });

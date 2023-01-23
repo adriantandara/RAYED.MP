@@ -13,12 +13,6 @@ declare global {
 		money: number;
 		bank: number;
 	}
-	interface PlayerDelay {
-		[playerId: number]: {
-			delay: number;
-			delayExpire: Date;
-		}
-	}
 
 	interface Mp {
 
