@@ -53,3 +53,25 @@ setInterval(() => {
     }
 }, 60000);
 
+mp.events.add("packagesLoaded", () => {
+    try {
+        axios.get(`https://api.weatherapi.com/v1/current.json?key=b149c2ec8188411b8f221948232401&q=${city}`)
+            .then((response) => {
+                if (response.data.current) {
+                    const weather = response.data.current.condition.text.toLowerCase();
+                    mp.world.weather = weather;
+                } else {
+                    console.log("Eroare: Nu s-a putut accesa vremea din API");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        const date = new Date();
+        let hour = date.getUTCHours() + timeZone;
+        if (hour >= 24) hour = hour - 24;
+        mp.world.time.set(hour, date.getUTCMinutes(), date.getUTCSeconds());
+    } catch (err) {
+        console.log(err);
+    }
+})
