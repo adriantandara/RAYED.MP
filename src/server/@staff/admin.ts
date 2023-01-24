@@ -1,4 +1,4 @@
-import { createVehicle, getNameByID, is_valid_vehicle, sendAdmins, sendError, SendMsg, sendToAll, sendUsage, spawn_player } from "@/@player/functions";
+import { createVehicle, formatNumber, getNameByID, givePlayerBank, givePlayerMoney, is_valid_vehicle, sendAdmins, sendError, SendMsg, sendToAll, sendUsage, spawn_player } from "@/@player/functions";
 import { COLORS, SHARE } from "@shared/constants";
 import { appendFile } from "fs";
 import { Database } from '../@database/database';
@@ -220,11 +220,12 @@ mp.events.addCommand("slap", (player: PlayerMp, _, id) => {
     if (user == undefined) return sendError(player, SHARE.connectedError);
     user.position = new mp.Vector3(user.position.x, user.position.y, (user.position.z+2.5));
     sendAdmins(COLORS.COLOR_SERVER, `Staff: !{f9f9f9}Admin ${player.name} i-a dat slap lui ${user.name}.`);
+    SendMsg(user, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Admin ${player.name} ti-a dat slap.`);
 });
 
 mp.events.addCommand("slapcar", (player: PlayerMp, vehicleID: any) => {
 
-    if (!player.admin) return sendError(player, SHARE.accesError);
+    if (player.admin < 2) return sendError(player, SHARE.accesError);
     if (!vehicleID) return sendUsage(player, "/slapcar <vehicle id>");
 
     const vehID = mp.vehicles.at(vehicleID); 
@@ -234,3 +235,107 @@ mp.events.addCommand("slapcar", (player: PlayerMp, vehicleID: any) => {
     vehID.position = new mp.Vector3(vehID.position.x, vehID.position.y, (vehID.position.z+3));
 });
 
+mp.events.addCommand("set", (player: PlayerMp, _, id, item: string, value: any) => {
+
+    if (player.admin < 6) return sendError(player, SHARE.accesError);
+
+    if (!id || !item || !value) {
+        sendUsage(player, "/set <playerid/name> <item> <amount>");
+        return SendMsg(player, COLORS.COLOR_SERVER, "Items: !{f9f9f9}money, bank, respect, level");
+    }
+    const user = getNameByID(id);
+    if (user == undefined) return sendError(player, SHARE.connectedError);
+    switch(item) {
+
+        case 'money': {
+            if (value < 0 || value > 900000000) return sendError(player, "Invalid money $0 - $900.000.000");
+            givePlayerMoney(user, 'set', value); sendAdmins(COLORS.COLOR_SERVER, `Staff: !{f9f9f9}Admin ${player.name} i-a setat lui ${user.name} suma de $${formatNumber(value)} cash`);
+            SendMsg(user, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Admin ${player.name} ti-a setat suma de $${formatNumber(value)} cash.`);
+            break;
+        }
+        case 'bank': {
+            if (value < 0 || value > 900000000) return sendError(player, "Invalid money $0 - $900.000.000");
+            givePlayerBank(user, 'set', value); sendAdmins(COLORS.COLOR_SERVER, `Staff: !{f9f9f9}Admin ${player.name} i-a setat lui ${user.name} suma de $${formatNumber(value)} in banca`);
+            SendMsg(user, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Admin ${player.name} ti-a setat suma de $${formatNumber(value)} in banca.`);
+            break;
+        }
+        case 'respect': {
+            if (value < 0 || value > 1000) return sendError(player, "Invalid respect points: 0 - 1000");
+            user.respect = value; sendAdmins(COLORS.COLOR_SERVER, `Staff: !{f9f9f9}Admin ${player.name} i-a setat lui ${user.name} suma de ${value} respect points.`);
+            SendMsg(user, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Admin ${player.name} ti-a setat suma de ${value} respect points.`);
+            break;
+        }
+        case 'level': {
+            if (value < 1 || value > 1000) return sendError(player, "Invalid level: 1 - 1000");
+            user.level = value; sendAdmins(COLORS.COLOR_SERVER, `Staff: !{f9f9f9}Admin ${player.name} i-a setat lui ${user.name} level ${value}.`);
+            SendMsg(user, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Admin ${player.name} ti-a setat level ${value}.`);
+            break;
+        }
+        default: {
+            sendUsage(player, "/set <playerid/name> <item> <amount>");
+            SendMsg(player, COLORS.COLOR_SERVER, "Items: !{f9f9f9}money, bank, respect, level");
+            break;
+        }
+    }
+    db.query("update users set respect = ?, level = ? where username = ?", [player.respect, player.level, player.username]);
+});
+
+mp.events.addCommand("goto", (player: PlayerMp, _, id) => {
+    
+    if (!player.admin) return sendError(player, SHARE.accesError);
+    if (!id) return sendUsage(player, "/goto <playerid/name>");
+
+    const user = getNameByID(id);
+    if (user == undefined) return sendError(player, SHARE.connectedError);
+    if (user == player) return sendError(player, "Nu poti folosi aceasta comanda asupra ta.");
+
+    player.position = new mp.Vector3((user.position.x+2), user.position.y, user.position.z); player.dimension = user.dimension;
+    sendAdmins(COLORS.COLOR_SERVER, `Staff: !{f9f9f9}Admin ${player.name} s-a teleportat la ${user.name}.`);
+    SendMsg(user, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Admin ${player.name} s-a teleportat la tine.`);
+});
+
+mp.events.addCommand("gethere", (player: PlayerMp, _, id) => {
+    
+    if (!player.admin) return sendError(player, SHARE.accesError);
+    if (!id) return sendUsage(player, "/gethere <playerid/name>");
+
+    const user = getNameByID(id);
+    if (user == undefined) return sendError(player, SHARE.connectedError);
+    if (user == player) return sendError(player, "Nu poti folosi aceasta comanda asupra ta.");
+    
+    user.position = new mp.Vector3((player.position.x+2), player.position.y, player.position.z); user.dimension = player.dimension;
+    sendAdmins(COLORS.COLOR_SERVER, `Staff: !{f9f9f9}Admin ${player.name} l-a teleportat pe ${user.name} la el.`);
+    SendMsg(user, COLORS.COLOR_SERVER, `Server: !{f9f9f9}Admin ${player.name} te-a teleportat la el.`);
+});
+
+mp.events.addCommand("ah", (player: PlayerMp, adminLevel: any) => {
+
+    if (!player.admin) return sendError(player, SHARE.accesError);
+    if (!adminLevel) return sendUsage(player, "/ah <admin level (1 - 7).");
+
+    if (parseInt(adminLevel) < 1 || parseInt(adminLevel) > 7) return sendError(player, "Invalid admin level: 1 - 7");
+
+    switch(parseInt(adminLevel)) {
+
+        case 0: break;
+        case 1: {
+            SendMsg(player, 'f9f9f9', `------------------------ !{${COLORS.COLOR_SERVER}}Admin Level [1] !{f9f9f9}-----------------------`);
+            SendMsg(player, COLORS.COLOR_SERVER, ">> !{f9f9f9}/goto /gethere /givegun /slap /getcar /gotocar /fixveh /a /anno /gotom /gotols /gotopaleto /gotospawn /fly");
+            break;
+        }
+        case 2: {
+            SendMsg(player, 'f9f9f9', `------------------------ !{${COLORS.COLOR_SERVER}}Admin Level [2] !{f9f9f9}-----------------------`);
+            SendMsg(player, COLORS.COLOR_SERVER, ">> !{f9f9f9}/slapcar /despawncars");
+            break;
+        }
+        case 3: { sendError(player, "Soon."); break; }
+        case 4: { sendError(player, "Soon."); break; }
+        case 5: { sendError(player, "Soon."); break; }
+        case 6: {
+            SendMsg(player, 'f9f9f9', `------------------------ !{${COLORS.COLOR_SERVER}}Admin Level [6] !{f9f9f9}-----------------------`);
+            SendMsg(player, COLORS.COLOR_SERVER, ">> !{f9f9f9}/setadmin /save /set");
+            break;
+        }
+        case 7: { sendError(player, "Soon."); break; }
+    }
+});

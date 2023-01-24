@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.container {
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.text-payday {
+    position: relative;
+    top: 77.5vh;
+    color: white;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 600;
+    left: 7.5vh;
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    text-align: center;
+}
+
+.payday-color {
+    color: #8e53e9;
+}
+
+@media only screen and (max-width: 800px) {
+    
+    .text-payday {
+        position: relative;
+        font-size: 2vh;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    
+    .text-payday {
+        position: relative;
+        left: 2.5vh;
+        font-size: 2vh;
+    }
+}

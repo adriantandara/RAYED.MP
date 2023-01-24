@@ -4,4 +4,6 @@ export const player_data_select = (player: PlayerMp, rows: any) => {
     player.skin = rows.skin;
     player.money = rows.money;
     player.bank = rows.bank;
+    player.respect = rows.respect;
+    player.level = rows.level;
 };

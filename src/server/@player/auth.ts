@@ -59,9 +59,9 @@ mp.events.add("load_player_account", async (player: PlayerMp, username: string) 
         if (rows && rows.length !== 0) {
             player_data_select(player, rows);
 
-            player.name = username;
+            player.name = rows.username;
 
-            player.setVariable("username", username);
+            player.setVariable("username", rows.username);
             player.setVariable("logged", true);
             setTimeout(() => {
 

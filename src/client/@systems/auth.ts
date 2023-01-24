@@ -2,7 +2,6 @@
 var login_browser_component: any;
 var interfaceBrowser = mp.browsers.new("package://@ui/hud_new/hud.components.html");
 
-
 /* ---- EVENTS ---- */
 mp.events.add("playerReady", () => { mp.events.call("show_login"); });
 mp.events.add("login_data", (username: string, password: string) => { mp.events.callRemote("login_account", username, password); });
@@ -28,6 +27,7 @@ mp.events.add("loadPlayerName", (name) => { interfaceBrowser.execute("load_playe
 mp.events.add("loadPlayerId", (id) => { interfaceBrowser.execute("load_player_id('"+ id +"');"); });
 
 mp.events.add("show_login", () => {
+
     login_browser_component = mp.browsers.new('package://@ui/account/index.html');
 
     mp.players.local.freezePosition(true);

@@ -2,6 +2,7 @@ function load_player_cash(money) { return document.getElementById("bank").textCo
 function load_player_bank(money) { return document.getElementById("cash").textContent = `${formatNumber(money, 0)}`; };
 function load_player_online(online) { return document.getElementById("online").textContent = `${online}`; };
 function load_player_id(id) { return document.getElementById("idPlayer").textContent = `(${id})`; };
+function load_player_name(name) { return document.getElementById("logo-name").textContent = `${name}`; };
 
 
 function load_server_clock() {

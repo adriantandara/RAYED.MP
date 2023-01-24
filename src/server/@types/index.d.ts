@@ -12,6 +12,8 @@ declare global {
 		admin: number;
 		money: number;
 		bank: number;
+		respect: number;
+		level: number;
 	}
 
 	interface Mp {

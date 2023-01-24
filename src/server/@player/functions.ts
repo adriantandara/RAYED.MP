@@ -1,6 +1,9 @@
+import { Database } from "@/@database/database";
 import { COLORS } from "@shared/constants";
 import { pedsData } from "./pedsData";
 import { vehiclesData } from "./vehiclesData";
+
+let db = new Database();
 
 
 const random_spawns: Vector3[] = [
@@ -82,5 +85,28 @@ export const sendToAll = (color: string, message: string) => {
         if (x.getVariable('logged') === true) x.outputChatBox(`${(x.data.timeStamp == 1) ? (`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] `) : ('')}!{${color}} ${message}`);
     });
 };
+export const givePlayerMoney = (player: PlayerMp, type: string, amount: number) => {
+
+    switch (type) {
+        case 'set': { player.money = amount; break; }
+        case 'give': { player.money += amount; break; }
+        case 'take': { player.money -= amount; break; }
+    }
+    db.query("update users set money = ? where username = ?", [player.money, player.name]);
+    player.call("loadPlayerCash", [player.money]);
+};
+export const givePlayerBank = (player: PlayerMp, type: string, amount: number) => {
+
+    switch (type) {
+        case 'set': { player.bank = amount; break; }
+        case 'give': { player.bank += amount; break; }
+        case 'take': { player.bank -= amount; break; }
+    }
+    db.query("update users set bank = ? where username = ?", [player.bank, player.name]);
+    player.call("loadPlayerBank", [player.bank]);
+};
+export function formatNumber(value: number): string {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
 export const is_valid_vehicle = (value: string) => { return (vehiclesData.includes(value) ? 1 : 0); };
 export const is_skin_valid = (value: string) => { return (pedsData.includes(value) ? 1 : 0); };
