@@ -333,7 +333,7 @@ mp.events.addCommand("ah", (player: PlayerMp, adminLevel: any) => {
         case 5: { sendError(player, "Soon."); break; }
         case 6: {
             SendMsg(player, 'f9f9f9', `------------------------ !{${COLORS.COLOR_SERVER}}Admin Level [6] !{f9f9f9}-----------------------`);
-            SendMsg(player, COLORS.COLOR_SERVER, ">> !{f9f9f9}/setadmin /save /set");
+            SendMsg(player, COLORS.COLOR_SERVER, ">> !{f9f9f9}/setadmin /save /set /setweather /settime");
             break;
         }
         case 7: { sendError(player, "Soon."); break; }

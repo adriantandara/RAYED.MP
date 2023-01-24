@@ -16,9 +16,8 @@ declare global {
 		level: number;
 	}
 
-	interface Mp {
-
-		game: any;
+	interface WeatherData {
+		weather: { main: string }[];
 	}
 }
 
