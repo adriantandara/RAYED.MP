@@ -6,9 +6,9 @@ export class Database {
     constructor() {
         this.connection = mysql.createConnection({
             host: "127.0.0.1",
-            user: "userdatabaseocop0sdw",
-            password: "MOYYGegtATH4OHEJ2j48TKgb8XtDGDLv",
-            database: "baza2"
+            user: "root",
+            password: "password",
+            database: "nume baza de date"
         });
         this.connection.connect();
     }
